@@ -1,0 +1,46 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package studentdatabasejpa;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+public class StudentDatabaseJPA {
+    public static void main(String[] args) {
+       Student std1 = new Student(1, "Jeno", 3.6);
+       Student std2 = new Student(2, "Jisung", 3.5);
+       StudentTable.insertStudent(std1);
+       StudentTable.insertStudent(std2);
+       
+       List<Student> studentList = StudentTable.findAllStudent();
+       printAllStudent(studentList);
+    }
+    public static void printAllStudent(List<Student> studentList) {
+        for(Student std : studentList) {
+           System.out.print(std.getId() + " ");
+           System.out.print(std.getName() + " ");
+           System.out.println(std.getGPA() + " ");
+       }
+    }
+    public static void persist(Object object) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("StudentDatabaseJPAPU");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        try {
+            em.persist(object);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
+    }
+    
+}
